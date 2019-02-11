@@ -34,19 +34,19 @@ const char *college_data[][11] = {
     { "MIT",  "bob","abe","col","fred","gav","dan","ian","ed","jon","hal" }
 };
 
+// Other examples
+//  const char *student_data[][3] = {
+//    {"1", "c2", "c1"},
+//    {"2", "c2", "c1"},
+//    {"3", "c2", "c1"},
+//    {"4", "c1", "c2"},
+//    {"5", "c1", "c2"}
+//  };
 
- // const char *student_data[][3] = {
- //   {"1", "c2", "c1"},
- //   {"2", "c2", "c1"},
- //   {"3", "c2", "c1"},
- //   {"4", "c1", "c2"},
- //   {"5", "c1", "c2"}
- // };
-
- // const char *college_data[][6] = {
- //   {"c1", "5", "3", "4", "1", "2"},
- //   {"c2", "3", "5", "2", "1", "4"}
- // };
+//  const char *college_data[][6] = {
+//    {"c1", "5", "3", "4", "1", "2"},
+//    {"c2", "3", "5", "2", "1", "4"}
+//  };
 
 // Result should be with quotas 2,2:
 // Admissions:
@@ -57,6 +57,8 @@ const char *college_data[][11] = {
 // Stablility:
 // 	(all admissions stable)
 
+
+// possible to increase/decrease the quotas
 const int quota[] = {2, 2};
 
 
@@ -83,8 +85,8 @@ void check_stability(const Couples &admitted, const PrefMap &student_pref, const
   bool stable = true;
   for (Couples::const_iterator it = admitted.begin(); it != admitted.end(); ++it)
     {
-      const string &college = it->first;//bride
-      const string &student = it->second;//groom
+      const string &college = it->first;// in SMP: bride
+      const string &student = it->second;//in SMP: groom
       const PrefList &preflist = student_pref.at(student);
  
         for (PrefList::const_iterator it = preflist.begin(); it != preflist.end(); ++it)
@@ -120,8 +122,8 @@ void check_stability(const Couples &admitted, const PrefMap &student_pref, const
  
 int main()
 {
-  PrefMap student_pref, college_pref;// men, women
-  queue<string> freestudents;//bachelors
+  PrefMap student_pref, college_pref;// in SMP:  men, women
+  queue<string> freestudents;//in SMP: bachelors
   Quotas college_quotas;
   QuotasState college_quotas_st;
   
@@ -161,17 +163,6 @@ int main()
       {
 
 
-	
-	// cout << "========================== Iteration [" << count << "] ===========================" << endl;
-	// for( int i = 0; i < freestudents.size(); i++){
-	//   string s = freestudents.front();
-	//   cout << s << endl;
-	//   freestudents.pop();
-	//   freestudents.push(s);
-	  
-	// }
-	// cout << "========================== ===========================" << endl;
-	
         const string &freestudent = freestudents.front();
         const PrefList &preflist = student_pref[freestudent];
 
@@ -248,10 +239,4 @@ int main()
  
     check_stability(admitted, student_pref, college_pref);
  
- //    cout << "Perturb:\n";
-//     std::swap(admitted["Harvard"], admitted["MIT"]);
-//     cout << "\t pair Harvard with " << admitted["Harvard"] << " and MIT with " << admitted["MIT"] << "\n";
- 
-//     check_stability(admitted, student_pref, college_pref);
-      
 }
