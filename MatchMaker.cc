@@ -71,27 +71,27 @@ void MatchMaker::check_stability(const Couples &admitted, const PrefMap &student
       const string &student = it->second;//in SMP: groom
       const PrefList &preflist = student_pref.at(student);
  
-        for (PrefList::const_iterator it = preflist.begin(); it != preflist.end(); ++it)
+        for (PrefList::const_iterator itp = preflist.begin(); itp != preflist.end(); ++itp)
         {
-            if (*it == college) // he prefers this college
+            if (*itp == college) // he prefers this college
                 break;
 
 	    
-            if (prefers(preflist, *it, college)){ // he prefers another college
+            if (prefers(preflist, *itp, college)){ // he prefers another college
 	      // check if any other college prefers him
 	      
 	      for (Couples::const_iterator it_ad = admitted.begin(); it_ad != admitted.end(); ++it_ad)
-		if(it_ad->first == *it){
+		if(it_ad->first == *itp){
 		  const string &student_other = it_ad->second;
 		
 		// check if there is other college that prefers him over any other student
-		  if (student_other != student && prefers(college_pref.at(*it), student, student_other))
+		  if (student_other != student && prefers(college_pref.at(*itp), student, student_other))
 		    {
-		      cout << "\t" << *it <<
+		      cout << "\t" << *itp <<
 			" prefers " << student <<
 			" over " << student_other <<
 			" and " << student <<
-			" prefers " << *it <<
+			" prefers " << *itp <<
 			" over " << college << "\n";
 		      stable = false;
 		    }
@@ -153,8 +153,8 @@ void MatchMaker::do_matching(){
 	      if (freestudent != student && prefers(college_pref[college], freestudent, student)){
 		// check that this freestudent is not yet on the waiting list of this college
 		bool onwaiting = false;
-		for (Couples::const_iterator it_ad = admitted.begin(); it_ad != admitted.end(); ++it_ad){
-		  if(it_ad->first == college && it_ad->second == freestudent)
+		for (Couples::const_iterator itc = admitted.begin(); itc != admitted.end(); ++itc){
+		  if(itc->first == college && itc->second == freestudent)
 		    onwaiting = true;
 		}
 		if(onwaiting == false){

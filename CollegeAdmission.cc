@@ -16,37 +16,37 @@ using namespace std;
 // or has been rejected by every college to which he can apply.
 // 5. College admits everyone on their waiting list.
 
-const char *student_data[][3] = {
-  { "abe",  "Harvard","MIT"},
-    { "bob",  "Harvard","MIT"},
-    { "col",  "Harvard","MIT"},
-    { "dan",  "Harvard","MIT"},
-    { "ed",   "Harvard","MIT"},
-    { "fred", "Harvard","MIT"},
-    { "gav",  "Harvard","MIT"},
-    { "hal",  "Harvard","MIT"},
-    { "ian",  "Harvard","MIT"},
-    { "jon",  "Harvard","MIT"}
-};
+// const char *student_data[][3] = {
+//   { "abe",  "Harvard","MIT"},
+//     { "bob",  "Harvard","MIT"},
+//     { "col",  "Harvard","MIT"},
+//     { "dan",  "Harvard","MIT"},
+//     { "ed",   "Harvard","MIT"},
+//     { "fred", "Harvard","MIT"},
+//     { "gav",  "Harvard","MIT"},
+//     { "hal",  "Harvard","MIT"},
+//     { "ian",  "Harvard","MIT"},
+//     { "jon",  "Harvard","MIT"}
+// };
  
-const char *college_data[][11] = {
-    { "Harvard",  "bob","fred","jon","gav","ian","abe","dan","ed","col","hal" },
-    { "MIT",  "bob","abe","col","fred","gav","dan","ian","ed","jon","hal" }
-};
+// const char *college_data[][11] = {
+//     { "Harvard",  "bob","fred","jon","gav","ian","abe","dan","ed","col","hal" },
+//     { "MIT",  "bob","abe","col","fred","gav","dan","ian","ed","jon","hal" }
+// };
 
 // Other examples
-//  const char *student_data[][3] = {
-//    {"1", "c2", "c1"},
-//    {"2", "c2", "c1"},
-//    {"3", "c2", "c1"},
-//    {"4", "c1", "c2"},
-//    {"5", "c1", "c2"}
-//  };
+ const char *student_data[][3] = {
+   {"1", "c2", "c1"},
+   {"2", "c2", "c1"},
+   {"3", "c2", "c1"},
+   {"4", "c1", "c2"},
+   {"5", "c1", "c2"}
+ };
 
-//  const char *college_data[][6] = {
-//    {"c1", "5", "3", "4", "1", "2"},
-//    {"c2", "3", "5", "2", "1", "4"}
-//  };
+ const char *college_data[][6] = {
+   {"c1", "5", "3", "4", "1", "2"},
+   {"c2", "3", "5", "2", "1", "4"}
+ };
 
 // Result should be with quotas 2,2:
 // Admissions:
@@ -89,27 +89,27 @@ void check_stability(const Couples &admitted, const PrefMap &student_pref, const
       const string &student = it->second;//in SMP: groom
       const PrefList &preflist = student_pref.at(student);
  
-        for (PrefList::const_iterator it = preflist.begin(); it != preflist.end(); ++it)
+        for (PrefList::const_iterator itp = preflist.begin(); itp != preflist.end(); ++itp)
         {
-            if (*it == college) // he prefers this college
+            if (*itp == college) // he prefers this college
                 break;
 
 	    
-            if (prefers(preflist, *it, college)){ // he prefers another college
+            if (prefers(preflist, *itp, college)){ // he prefers another college
 	      // check if any other college prefers him
 	      
 	      for (Couples::const_iterator it_ad = admitted.begin(); it_ad != admitted.end(); ++it_ad)
-		if(it_ad->first == *it){
+		if(it_ad->first == *itp){
 		  const string &student_other = it_ad->second;
 		
 		// check if there is other college that prefers him over any other student
-		  if (student_other != student && prefers(college_pref.at(*it), student, student_other))
+		  if (student_other != student && prefers(college_pref.at(*itp), student, student_other))
 		    {
-		      cout << "\t" << *it <<
+		      cout << "\t" << *itp <<
 			" prefers " << student <<
 			" over " << student_other <<
 			" and " << student <<
-			" prefers " << *it <<
+			" prefers " << *itp <<
 			" over " << college << "\n";
 		      stable = false;
 		    }
@@ -199,8 +199,8 @@ int main()
 		if (freestudent != student && prefers(college_pref[college], freestudent, student)){
 		  // check that this freestudent is not yet on the waiting list of this college
 		  bool onwaiting = false;
-		  for (Couples::const_iterator it_ad = admitted.begin(); it_ad != admitted.end(); ++it_ad){
-		    if(it_ad->first == college && it_ad->second == freestudent)
+		  for (Couples::const_iterator itc = admitted.begin(); itc != admitted.end(); ++itc){
+		    if(itc->first == college && itc->second == freestudent)
 		      onwaiting = true;
 		  }
 		  if(onwaiting == false){
